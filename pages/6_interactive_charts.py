@@ -52,7 +52,7 @@ y_axis = st.selectbox("Y Axis", options=df.columns, index=df.columns.get_loc(y_c
 # Chart type
 chart_type = st.radio(
     "Chart type",
-    options=["Scatter", "Bar", "Box"],
+    options=["Scatter", "Line", "Bar", "Histogram", "Box"],
     index=0,
     horizontal=True,
 )
@@ -61,14 +61,24 @@ if chart_type == "Scatter":
     fig = px.scatter(df, x=x_axis, y=y_axis)
     st.plotly_chart(fig, use_container_width=True)
 
+elif chart_type == "Line":
+    # Line chart assumes ordering matters; Plotly will use the dataframe order.
+    fig = px.line(df, x=x_axis, y=y_axis)
+    st.plotly_chart(fig, use_container_width=True)
+
 elif chart_type == "Bar":
-    # For bar, y should be numeric ideally; Plotly will aggregate if needed.
     fig = px.bar(df, x=x_axis, y=y_axis)
+    st.plotly_chart(fig, use_container_width=True)
+
+elif chart_type == "Histogram":
+    # Histogram uses x only; y_axis is ignored.
+    fig = px.histogram(df, x=x_axis)
     st.plotly_chart(fig, use_container_width=True)
 
 else:  # Box
     fig = px.box(df, x=x_axis, y=y_axis)
     st.plotly_chart(fig, use_container_width=True)
+
 
 with st.expander("Preview data"):
     st.dataframe(df.head(50), use_container_width=True)
