@@ -8,20 +8,22 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file:
-
     df = pd.read_csv(uploaded_file)
 
     missing = df.isnull().sum()
-
     st.write(missing)
-    
-missing_df = pd.DataFrame({
-    "Column": missing.index,
-    "Missing": missing.values
-})
 
-fig = px.bar(
-    missing_df,
-    x="Column",
-    y="Missing"
-)
+    missing_df = pd.DataFrame({
+        "Column": missing.index,
+        "Missing": missing.values,
+    })
+
+    fig = px.bar(
+        missing_df,
+        x="Column",
+        y="Missing",
+    )
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.info("Upload a CSV file to view missing values.")
+
